@@ -2,6 +2,8 @@
 using Reloaded.Mod.Interfaces;
 using RemixToolkit.Reloaded.Configuration;
 using RemixToolkit.Reloaded.Template;
+using RemixToolkit.Reloaded.Toolkit;
+using RemixToolkit.Interfaces;
 
 #if DEBUG
 using System.Diagnostics;
@@ -9,7 +11,7 @@ using System.Diagnostics;
 
 namespace RemixToolkit.Reloaded;
 
-public class Mod : ModBase
+public class Mod : ModBase, IExports
 {
     private readonly IModLoader _modLoader;
     private readonly IReloadedHooks? _hooks;
@@ -18,6 +20,8 @@ public class Mod : ModBase
 
     private Config _config;
     private readonly IModConfig _modConfig;
+
+    private readonly RemixToolkitService _toolkit;
 
     public Mod(ModContext context)
     {
@@ -32,7 +36,10 @@ public class Mod : ModBase
 #endif
         Project.Initialize(_modConfig, _modLoader, _log, true);
         Log.LogLevel = _config.LogLevel;
-    }
+
+        _toolkit = new(_modLoader);
+        _modLoader.AddOrReplaceController<IRemixToolkit>(_owner, _toolkit);
+     }
 
     #region Standard Overrides
     public override void ConfigurationUpdated(Config configuration)
@@ -43,6 +50,8 @@ public class Mod : ModBase
         _log.WriteLine($"[{_modConfig.ModId}] Config Updated: Applying");
         Log.LogLevel = _config.LogLevel;
     }
+
+    public Type[] GetTypes() => [typeof(IRemixToolkit)];
     #endregion
 
     #region For Exports, Serialization etc.
