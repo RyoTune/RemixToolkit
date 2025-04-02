@@ -3,7 +3,6 @@
  * to make it easier to upgrade to newer versions of the template.
 */
 
-using Reloaded.Hooks.ReloadedII.Interfaces;
 using Reloaded.Mod.Interfaces;
 using Reloaded.Mod.Interfaces.Internal;
 using RemixToolkit.Reloaded.Configuration;
@@ -29,13 +28,6 @@ namespace RemixToolkit.Reloaded.Template
         private Config _configuration = null!;
 
         /// <summary>
-        /// An interface to Reloaded's the function hooks/detours library.
-        /// See: https://github.com/Reloaded-Project/Reloaded.Hooks
-        ///      for documentation and samples. 
-        /// </summary>
-        private IReloadedHooks? _hooks;
-
-        /// <summary>
         /// Configuration of the current mod.
         /// </summary>
         private IModConfig _modConfig = null!;
@@ -53,7 +45,6 @@ namespace RemixToolkit.Reloaded.Template
             _modLoader = (IModLoader)loaderApi;
             _modConfig = (IModConfig)modConfig;
             _logger = (ILogger)_modLoader.GetLogger();
-            _modLoader.GetController<IReloadedHooks>()?.TryGetTarget(out _hooks!);
 
             // Your config file is in Config.json.
             // Need a different name, format or more configurations? Modify the `Configurator`.
@@ -67,7 +58,6 @@ namespace RemixToolkit.Reloaded.Template
             _mod = new Mod(new ModContext()
             {
                 Logger = _logger,
-                Hooks = _hooks,
                 ModLoader = _modLoader,
                 ModConfig = _modConfig,
                 Owner = this,

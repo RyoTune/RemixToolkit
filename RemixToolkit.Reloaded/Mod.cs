@@ -1,5 +1,4 @@
-﻿using Reloaded.Hooks.ReloadedII.Interfaces;
-using Reloaded.Mod.Interfaces;
+﻿using Reloaded.Mod.Interfaces;
 using RemixToolkit.Reloaded.Configuration;
 using RemixToolkit.Reloaded.Template;
 using RemixToolkit.Interfaces;
@@ -18,7 +17,6 @@ namespace RemixToolkit.Reloaded;
 public class Mod : ModBase, IExports
 {
     private readonly IModLoader _modLoader;
-    private readonly IReloadedHooks? _hooks;
     private readonly ILogger _log;
     private readonly IMod _owner;
 
@@ -30,7 +28,6 @@ public class Mod : ModBase, IExports
     public Mod(ModContext context)
     {
         _modLoader = context.ModLoader;
-        _hooks = context.Hooks;
         _log = context.Logger;
         _owner = context.Owner;
         _config = context.Configuration;
@@ -38,7 +35,7 @@ public class Mod : ModBase, IExports
 #if DEBUG
         Debugger.Launch();
 #endif
-        Project.Initialize(_modConfig, _modLoader, _log, true);
+        Log.Init(_modConfig.ModId, _log, true);
         Log.LogLevel = _config.LogLevel;
 
         _configService = new ConfigsService(_modLoader);
