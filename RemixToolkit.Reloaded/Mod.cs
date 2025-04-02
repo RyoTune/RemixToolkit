@@ -6,8 +6,8 @@ using RemixToolkit.Interfaces;
 using RemixToolkit.Reloaded.FileSystem;
 using RemixToolkit.Reloaded.Configs;
 using RemixToolkit.Interfaces.Serializers;
-using RemixToolkit.Reloaded.Serializers;
 using Reloaded.Mod.Interfaces.Internal;
+using RemixToolkit.Core.Serializers;
 
 #if DEBUG
 using System.Diagnostics;

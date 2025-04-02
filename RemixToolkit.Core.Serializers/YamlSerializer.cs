@@ -1,8 +1,8 @@
-﻿using YamlDotNet.Serialization.NamingConventions;
+﻿using RemixToolkit.Interfaces.Serializers;
+using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization;
-using RemixToolkit.Interfaces.Serializers;
 
-namespace RemixToolkit.Reloaded.Serializers;
+namespace RemixToolkit.Core.Serializers;
 
 public class YamlSerializer : IYamlSerializer
 {

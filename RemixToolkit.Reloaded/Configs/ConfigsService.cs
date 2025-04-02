@@ -1,7 +1,7 @@
 ﻿using Reloaded.Mod.Interfaces;
 using Reloaded.Mod.Interfaces.Internal;
 using RemixToolkit.Core.Configs;
-using RemixToolkit.Reloaded.Serializers;
+using RemixToolkit.Core.Serializers;
 using SmartFormat;
 using System.Collections.Concurrent;
 using System.Reflection;

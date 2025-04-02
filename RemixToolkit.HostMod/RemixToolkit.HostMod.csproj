@@ -44,11 +44,11 @@
 
   <ItemGroup>
     <PackageReference Include="Reloaded.Mod.Interfaces" Version="2.4.0" ExcludeAssets="runtime" />
-    <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RemixToolkit.Core.Configs\RemixToolkit.Core.Configs.csproj" />
+    <ProjectReference Include="..\RemixToolkit.Core.Serializers\RemixToolkit.Core.Serializers.csproj" />
   </ItemGroup>
 
 </Project>
