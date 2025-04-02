@@ -31,6 +31,7 @@ public class Mod : ModBase
         Debugger.Launch();
 #endif
         Project.Initialize(_modConfig, _modLoader, _log, true);
+        Log.LogLevel = _config.LogLevel;
     }
 
     #region Standard Overrides
@@ -40,6 +41,7 @@ public class Mod : ModBase
         // ... your code here.
         _config = configuration;
         _log.WriteLine($"[{_modConfig.ModId}] Config Updated: Applying");
+        Log.LogLevel = _config.LogLevel;
     }
     #endregion
 

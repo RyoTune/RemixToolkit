@@ -1,11 +1,13 @@
-﻿using System.ComponentModel;
-using Reloaded.Mod.Interfaces.Structs;
-using RemixToolkit.Reloaded.Template.Configuration;
+﻿using RemixToolkit.Reloaded.Template.Configuration;
+using System.ComponentModel;
 
 namespace RemixToolkit.Reloaded.Configuration
 {
     public class Config : Configurable<Config>
     {
+        [DisplayName("Log Level")]
+        [DefaultValue(LogLevel.Information)]
+        public LogLevel LogLevel { get; set; } = LogLevel.Information;
     }
 
     /// <summary>
