@@ -10,12 +10,51 @@
   "ModR2RManagedDll64": "x64/RemixToolkit.HostMod.dll",
   "ModNativeDll32": "",
   "ModNativeDll64": "",
+  "Tags": [],
+  "CanUnload": null,
+  "HasExports": null,
   "IsLibrary": false,
   "ReleaseMetadataFileName": "RemixToolkit.HostMod.ReleaseMetadata.json",
-  "PluginData": {},
+  "PluginData": {
+    "GitHubDependencies": {
+      "IdToConfigMap": {
+        "RemixToolkit.Reloaded": {
+          "Config": {
+            "UserName": "RyoTune",
+            "RepositoryName": "RemixToolkit",
+            "UseReleaseTag": false,
+            "AssetFileName": "Mod.zip"
+          },
+          "ReleaseMetadataName": "RemixToolkit.Reloaded.ReleaseMetadata.json"
+        },
+        "reloaded.sharedlib.hooks": {
+          "Config": {
+            "UserName": "Sewer56",
+            "RepositoryName": "Reloaded.SharedLib.Hooks.ReloadedII",
+            "UseReleaseTag": true,
+            "AssetFileName": "reloaded.sharedlib.hooks.zip"
+          },
+          "ReleaseMetadataName": "Sewer56.Update.ReleaseMetadata.json"
+        },
+        "Reloaded.Memory.SigScan.ReloadedII": {
+          "Config": {
+            "UserName": "Reloaded-Project",
+            "RepositoryName": "Reloaded.Memory.SigScan",
+            "UseReleaseTag": false,
+            "AssetFileName": "Mod.zip"
+          },
+          "ReleaseMetadataName": "Reloaded.Memory.SigScan.ReloadedII.ReleaseMetadata.json"
+        }
+      }
+    }
+  },
   "IsUniversalMod": true,
-  "ModDependencies": [],
+  "ModDependencies": [
+    "RemixToolkit.Reloaded"
+  ],
   "OptionalDependencies": [],
   "SupportedAppId": [],
-  "ProjectUrl": ""
+  "ProjectUrl": "",
+  "CreatorUrl": "",
+  "IsSeparator": false
 }
