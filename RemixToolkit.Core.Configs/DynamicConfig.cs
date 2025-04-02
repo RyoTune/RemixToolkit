@@ -1,9 +1,11 @@
 ﻿using Reloaded.Mod.Interfaces;
+using Reloaded.Mod.Interfaces.Internal;
 using RemixToolkit.Core.Configs.Models;
 using RemixToolkit.Core.Configs.Relfection;
 using RemixToolkit.Interfaces.Serializers;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 
 namespace RemixToolkit.Core.Configs;
@@ -41,6 +43,28 @@ public class DynamicConfig : DynamicObject, IConfigurable
         }
 
         Save = () => yaml.SerializeFile(configFile, _properties.ToDictionary(x => x.Key, x => x.Value.GetValue(this)));
+    }
+
+    public static bool TryCreateForMod(IYamlSerializer yaml, string modDir, string configDir, [NotNullWhen(true)] out DynamicConfig? config)
+    {
+        config = null;
+
+        var schemaFile = GetModSchemaFile(modDir);
+        if (File.Exists(schemaFile))
+        {
+            var configFile = GetModConfigFile(configDir);
+            config = new(yaml, schemaFile, configFile);
+            return true;
+        }
+
+        return false;
+    }
+
+    public static bool TryCreateForMod(IYamlSerializer yaml, IModLoader modLoader, IModConfigV1 modConfig, [NotNullWhen(true)] out DynamicConfig? config)
+    {
+        var modDir = modLoader.GetDirectoryForModId(modConfig.ModId);
+        var configDir = modLoader.GetModConfigDirectory(modConfig.ModId);
+        return TryCreateForMod(yaml, modDir, configDir, out config);
     }
 
     public PropertyDescriptor[] PropertyDescriptors { get; }
@@ -134,4 +158,8 @@ public class DynamicConfig : DynamicObject, IConfigurable
 
         return attributes.ToArray();
     }
+
+    private static string GetModSchemaFile(string modDir) => Path.Join(modDir, "ReMIX", "Config", "config.yaml");
+
+    private static string GetModConfigFile(string configDir) => Path.Join(configDir, "ReMIX", "Config", "data.yaml");
 }

@@ -13,10 +13,8 @@ public class DynamicConfigurator(IYamlSerializer yaml) : IConfiguratorV2
 
     public IConfigurable[] GetConfigurations()
     {
-        var schemaFile = GetModSchemaFile(_modDir!);
-        if (File.Exists(schemaFile))
+        if (DynamicConfig.TryCreateForMod(yaml, _modDir!, _configDir!, out var config))
         {
-            var config = new DynamicConfig(yaml, GetModSchemaFile(_modDir!), Path.Join(_configDir, "config.yaml"));
             TypeDescriptor.AddProvider(new DynamicConfigTypeDescriptionProvider(config), typeof(DynamicConfig));
             return [config];
         }
@@ -31,6 +29,4 @@ public class DynamicConfigurator(IYamlSerializer yaml) : IConfiguratorV2
     public bool TryRunCustomConfiguration() => false;
 
     public void Migrate(string oldDirectory, string newDirectory) { }
-
-    private static string GetModSchemaFile(string modDir) => Path.Join(modDir, "ReMIX", "Config", DynamicConfigSchema.SchemaFileName);
 }
