@@ -30,7 +30,11 @@ public class YamlSerializer : IYamlSerializer
     public T DeserializeFile<T>(string filePath) => Deserializer.Deserialize<T>(File.ReadAllText(filePath))
         ?? throw new Exception($"Failed to deserialize file.\nFile: {filePath}");
 
-    public void SerializeFile<T>(string filePath, T obj) => File.WriteAllText(filePath, Serializer.Serialize(obj));
+    public void SerializeFile<T>(string filePath, T obj)
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+        File.WriteAllText(filePath, Serializer.Serialize(obj));
+    }
 
     public T Deserialize<T>(string content) => Deserializer.Deserialize<T>(content)
         ?? throw new Exception($"Failed to deserialize content.\nContent: {content}");
