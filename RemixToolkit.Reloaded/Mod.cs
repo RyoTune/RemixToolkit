@@ -2,8 +2,12 @@
 using Reloaded.Mod.Interfaces;
 using RemixToolkit.Reloaded.Configuration;
 using RemixToolkit.Reloaded.Template;
-using RemixToolkit.Reloaded.Toolkit;
 using RemixToolkit.Interfaces;
+using RemixToolkit.Reloaded.FileSystem;
+using RemixToolkit.Reloaded.Configs;
+using RemixToolkit.Interfaces.Serializers;
+using RemixToolkit.Reloaded.Serializers;
+using Reloaded.Mod.Interfaces.Internal;
 
 #if DEBUG
 using System.Diagnostics;
@@ -21,7 +25,7 @@ public class Mod : ModBase, IExports
     private Config _config;
     private readonly IModConfig _modConfig;
 
-    private readonly RemixToolkitService _toolkit;
+    private readonly ConfigsService _configService;
 
     public Mod(ModContext context)
     {
@@ -37,9 +41,22 @@ public class Mod : ModBase, IExports
         Project.Initialize(_modConfig, _modLoader, _log, true);
         Log.LogLevel = _config.LogLevel;
 
-        _toolkit = new(_modLoader);
-        _modLoader.AddOrReplaceController<IRemixToolkit>(_owner, _toolkit);
+        _configService = new ConfigsService(_modLoader);
+
+        _modLoader.AddOrReplaceController<IYamlSerializer>(_owner, YamlSerializer.Instance);
+        _modLoader.AddOrReplaceController<IFileSystem>(_owner, FileSystemService.Instance);
+        _modLoader.ModLoading += OnModLoading;
      }
+
+    private void OnModLoading(IModV1 mod, IModConfigV1 modConfig)
+    {
+        if (!modConfig.ModDependencies.Contains(_modConfig.ModId))
+        {
+            return;
+        }
+
+        _configService.OnModLoading(mod, modConfig);
+    }
 
     #region Standard Overrides
     public override void ConfigurationUpdated(Config configuration)
@@ -51,7 +68,7 @@ public class Mod : ModBase, IExports
         Log.LogLevel = _config.LogLevel;
     }
 
-    public Type[] GetTypes() => [typeof(IRemixToolkit)];
+    public Type[] GetTypes() => [typeof(IYamlSerializer), typeof(IFileSystem)];
     #endregion
 
     #region For Exports, Serialization etc.

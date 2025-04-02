@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemixToolkit.Reloaded", "Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemixToolkit.Interfaces", "RemixToolkit.Interfaces\RemixToolkit.Interfaces.csproj", "{9DC52859-B2B1-44B2-9BF5-9E961D9D981F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemixToolkit.HostMod", "RemixToolkit.HostMod\RemixToolkit.HostMod.csproj", "{3AFDB1AF-D3AB-48F4-9C14-460C76AC1F8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemixToolkit.Core.Configs", "RemixToolkit.Core.Configs\RemixToolkit.Core.Configs.csproj", "{560C932F-2CFA-4729-BF81-D09BB6EBCECC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{9DC52859-B2B1-44B2-9BF5-9E961D9D981F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DC52859-B2B1-44B2-9BF5-9E961D9D981F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DC52859-B2B1-44B2-9BF5-9E961D9D981F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AFDB1AF-D3AB-48F4-9C14-460C76AC1F8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AFDB1AF-D3AB-48F4-9C14-460C76AC1F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AFDB1AF-D3AB-48F4-9C14-460C76AC1F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AFDB1AF-D3AB-48F4-9C14-460C76AC1F8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{560C932F-2CFA-4729-BF81-D09BB6EBCECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{560C932F-2CFA-4729-BF81-D09BB6EBCECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{560C932F-2CFA-4729-BF81-D09BB6EBCECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{560C932F-2CFA-4729-BF81-D09BB6EBCECC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

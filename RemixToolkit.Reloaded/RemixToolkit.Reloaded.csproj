@@ -47,9 +47,12 @@
     <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0" />
     <PackageReference Include="RyoTune.Reloaded" Version="2.1.1" />
     <PackageReference Include="Reloaded.Memory.SigScan.ReloadedII.Interfaces" Version="1.2.0" />
+    <PackageReference Include="SmartFormat.NET" Version="3.6.0" />
+    <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RemixToolkit.Core.Configs\RemixToolkit.Core.Configs.csproj" />
     <ProjectReference Include="..\RemixToolkit.Interfaces\RemixToolkit.Interfaces.csproj" />
   </ItemGroup>
 
