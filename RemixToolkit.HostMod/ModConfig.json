@@ -1,0 +1,21 @@
+{
+  "ModId": "RemixToolkit.HostMod",
+  "ModName": "Reloaded II.5 ReMIX Host Mod",
+  "ModAuthor": "RyoTune",
+  "ModVersion": "1.0.0",
+  "ModDescription": "Host mod for Reloaded II.5 ReMIX related functionality.",
+  "ModDll": "RemixToolkit.HostMod.dll",
+  "ModIcon": "Preview.png",
+  "ModR2RManagedDll32": "x86/RemixToolkit.HostMod.dll",
+  "ModR2RManagedDll64": "x64/RemixToolkit.HostMod.dll",
+  "ModNativeDll32": "",
+  "ModNativeDll64": "",
+  "IsLibrary": false,
+  "ReleaseMetadataFileName": "RemixToolkit.HostMod.ReleaseMetadata.json",
+  "PluginData": {},
+  "IsUniversalMod": true,
+  "ModDependencies": [],
+  "OptionalDependencies": [],
+  "SupportedAppId": [],
+  "ProjectUrl": ""
+}
