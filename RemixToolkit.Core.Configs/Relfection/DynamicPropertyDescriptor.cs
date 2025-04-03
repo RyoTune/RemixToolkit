@@ -28,7 +28,11 @@ public class DynamicPropertyDescriptor : PropertyDescriptor
 
     public override void ResetValue(object component) => _value = _initialValue;
 
-    public override void SetValue(object? component, object? value) => _value = Convert.ChangeType(value, PropertyType);
+    public override void SetValue(object? component, object? value)
+    {
+        _value = Convert.ChangeType(value, PropertyType);
+        this.OnValueChanged(component, EventArgs.Empty);
+    }
 
     public override bool ShouldSerializeValue(object component) => true;
 }
