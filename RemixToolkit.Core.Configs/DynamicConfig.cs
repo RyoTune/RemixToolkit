@@ -69,7 +69,7 @@ public class DynamicConfig : DynamicObject, IConfigurable
 
     public PropertyDescriptor[] PropertyDescriptors { get; }
 
-    public string ConfigName { get; } = "Reloaded II.5 ReMIX Toolkit";
+    public string ConfigName { get; } = "Config Created with ReMIX Toolkit";
 
     public Action Save { get; }
 
