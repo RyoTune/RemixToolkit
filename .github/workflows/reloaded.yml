@@ -22,22 +22,19 @@ on:
   workflow_dispatch:
 
 env:
-  RELOADEDIIMODS: .
-  PUBLISH_COMMON_PATH: ./Publish/ToUpload/
+  PUBLISH_GITHUB_TOOLKIT_PATH: ./Publish/ToUpload/RemixToolkit/Github
+  PUBLISH_GAMEBANANA_TOOLKIT_PATH: ./Publish/ToUpload/RemixToolkit/GameBanana
 
-  PUBLISH_GAMEBANANA_PATH: ./Publish/ToUpload/GameBanana
-  PUBLISH_GITHUB_PATH: ./Publish/ToUpload/Generic
-  PUBLISH_NUGET_PATH: ./Publish/ToUpload/NuGet
+  PUBLISH_GITHUB_HOSTMOD_PATH: ./Publish/ToUpload/HostMod/Github
+  PUBLISH_GAMEBANANA_HOSTMOD_PATH: ./Publish/ToUpload/HostMod/GameBanana
+
+  INTERFACES_PROJECT: RemixToolkit.Interfaces
 
   PUBLISH_CHANGELOG_PATH: ./Publish/Changelog.md
   PUBLISH_PATH: ./Publish
 
-  # Default value is official Reloaded package server.
-  NUGET_URL: http://packages.sewer56.moe:5000/v3/index.json
-
   IS_RELEASE: ${{ startsWith(github.ref, 'refs/tags/') }}
   RELEASE_TAG: ${{ github.ref_name }}
-  PROJECT_DIR: ./SharedScans.Reloaded
 
 jobs:
   build:
@@ -57,7 +54,7 @@ jobs:
         with:
           dotnet-version: 5.0.x
 
-      - name: Setup .NET Core SDK (7.0)
+      - name: Setup .NET Core SDK (8.0)
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
@@ -79,12 +76,9 @@ jobs:
           else {
               auto-changelog --sort-commits date --hide-credit --template keepachangelog --commit-limit false --unreleased --output "$env:PUBLISH_CHANGELOG_PATH" --template .github/changelog.hbs
           }
-
+          
       - name: Build
-        run: ${{ env.PROJECT_DIR }}/Publish.ps1
-
-      - name: Copy Build
-        run: Copy-Item -Force -Path "${{ env.PROJECT_DIR }}/Publish/*" -Destination "./Publish" -Recurse
+        run: ./PublishAll.ps1
 
       - name: Upload GitHub Release Artifact
         uses: actions/upload-artifact@v4
@@ -93,8 +87,9 @@ jobs:
           name: GitHub Release
           # A file, directory or wildcard pattern that describes what to upload
           path: |
-            ${{ env.PUBLISH_GITHUB_PATH }}/*
-
+            ${{ env.PUBLISH_GITHUB_TOOLKIT_PATH }}/*
+            ${{ env.PUBLISH_GITHUB_HOSTMOD_PATH }}/*
+          
       - name: Upload GameBanana Release Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -102,7 +97,8 @@ jobs:
           name: GameBanana Release
           # A file, directory or wildcard pattern that describes what to upload
           path: |
-            ${{ env.PUBLISH_GAMEBANANA_PATH }}/*
+            ${{ env.PUBLISH_GAMEBANANA_TOOLKIT_PATH }}/*
+            ${{ env.PUBLISH_GAMEBANANA_HOSTMOD_PATH }}/*
 
       - name: Upload Changelog Artifact
         uses: actions/upload-artifact@v4
