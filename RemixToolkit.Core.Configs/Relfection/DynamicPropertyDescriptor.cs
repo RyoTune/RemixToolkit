@@ -26,7 +26,7 @@ public class DynamicPropertyDescriptor : PropertyDescriptor
 
     public override object? GetValue(object? component) => _value;
 
-    public override void ResetValue(object component) => _value = _initialValue;
+    public override void ResetValue(object component) => SetValue(component, _initialValue);
 
     public override void SetValue(object? component, object? value)
     {
