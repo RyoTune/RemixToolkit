@@ -22,10 +22,10 @@ on:
   workflow_dispatch:
 
 env:
-  PUBLISH_GITHUB_TOOLKIT_PATH: ./Publish/ToUpload/RemixToolkit/Github
+  PUBLISH_GITHUB_TOOLKIT_PATH: ./Publish/ToUpload/RemixToolkit/Generic
   PUBLISH_GAMEBANANA_TOOLKIT_PATH: ./Publish/ToUpload/RemixToolkit/GameBanana
 
-  PUBLISH_GITHUB_HOSTMOD_PATH: ./Publish/ToUpload/HostMod/Github
+  PUBLISH_GITHUB_HOSTMOD_PATH: ./Publish/ToUpload/HostMod/Generic
   PUBLISH_GAMEBANANA_HOSTMOD_PATH: ./Publish/ToUpload/HostMod/GameBanana
 
   INTERFACES_PROJECT: RemixToolkit.Interfaces
