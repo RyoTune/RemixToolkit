@@ -135,11 +135,11 @@
 
     Removes executables from build output. Useful when performing R2R Optimisation.
 
-.PARAMETER UseScriptDirectory
-    Default: $True
+.PARAMETER IncludeRegexes
+    Default: "ModConfig\.json", "\.deps\.json", "\.runtimeconfig\.json"
 
-    Uses script directory for performing build. Otherwise uses current directory.
-    
+    Regexes of files to make sure are included by Reloaded.Publisher
+
 .EXAMPLE
   .\Publish.ps1 -ProjectPath "Reloaded.Hooks.ReloadedII/Reloaded.Hooks.ReloadedII.csproj" -PackageName "Reloaded.Hooks.ReloadedII" -PublishOutputDir "Publish/ToUpload"
 
@@ -158,12 +158,12 @@ param (
     $ReadmePath="",
     $Build=$True,
     $BuildR2R=$False,
-    $RemoveExe=$True,
-    $UseScriptDirectory=$True,
-
+    $RemoveExe = $True,
+    $IncludeRegexes = ("ModConfig\.json", "\.deps\.json", "\.runtimeconfig\.json"),
+	
     ## => User Config <= ## 
-    $ProjectPath = "RemixToolkit.Reloaded.csproj",
-    $PackageName = "RemixToolkit.Reloaded",
+    $ProjectPath = "BGME.Framework.csproj",
+    $PackageName = "BGME.Framework",
     $PublishOutputDir = "Publish/ToUpload",
 
     ## => User: Delta Config
@@ -178,9 +178,9 @@ param (
     $GitHubFallbackPattern = "", # For migrating from legacy build script.
     $GitHubInheritVersionFromTag = $True, # Uses version determined from release tag as opposed to metadata file in latest release.
 
-    $GameBananaItemId = 333681, # From mod page URL.
+    $GameBananaItemId = 477399, # From mod page URL.
 
-    $NuGetPackageId = "RemixToolkit.Reloaded",
+    $NuGetPackageId = "BGME.Framework",
     $NuGetFeedUrl = "http://packages.sewer56.moe:5000/v3/index.json",
     $NuGetAllowUnlisted = $False,
 
@@ -204,18 +204,13 @@ $reloadedToolsPath = "./Publish/Tools/Reloaded-Tools"    # Used to check if tool
 $updateToolsPath   = "./Publish/Tools/Update-Tools"      # Used to check if update tools are installed.
 $reloadedToolPath = "$reloadedToolsPath/Reloaded.Publisher.exe"  # Path to Reloaded publishing tool.
 $updateToolPath   = "$updateToolsPath/Sewer56.Update.Tool.dll" # Path to Update tool.
-$changelogFullPath = $null
-$readmeFullPath = $null
 if ($ChangelogPath) { $changelogFullPath = [System.IO.Path]::GetFullPath($ChangelogPath) }
 if ($ReadmePath) { $readmeFullPath = [System.IO.Path]::GetFullPath($ReadmePath) }
 
 ## => Script <= ##
 # Set Working Directory
-$UseScriptDirectory = [bool]::Parse($UseScriptDirectory)
-if ($UseScriptDirectory) {
-    Split-Path $MyInvocation.MyCommand.Path | Push-Location
-    [Environment]::CurrentDirectory = $PWD
-}
+Split-Path $MyInvocation.MyCommand.Path | Push-Location
+[Environment]::CurrentDirectory = $PWD
 
 # Convert Booleans
 $IsPrerelease = [bool]::Parse($IsPrerelease)
@@ -327,7 +322,9 @@ function Get-Common-Publish-Args {
 	if ($AllowDeltas -and $MakeDelta) {
         $arguments += " --olderversionfolders `"$deltaDirectory`""
 	}
-	
+
+    $arguments += "--includeregexes $IncludeRegexes"
+
 	return $arguments
 }
 
@@ -341,7 +338,7 @@ function Publish-Common {
     
     Remove-Item $Directory -Recurse -ErrorAction SilentlyContinue
     New-Item $Directory -ItemType Directory -ErrorAction SilentlyContinue
-	$arguments = "$(Get-Common-Publish-Args -AllowDeltas $AllowDeltas) --outputfolder `"$Directory`" --publishtarget $PublishTarget"
+    $arguments = "$(Get-Common-Publish-Args -AllowDeltas $AllowDeltas) --outputfolder `"$Directory`" --publishtarget $PublishTarget"
 	$command = "$reloadedToolPath $arguments"
 	Write-Host "$command`r`n`r`n"
 	Invoke-Expression $command
@@ -403,6 +400,4 @@ Remove-Item $TempDirectory -Recurse -ErrorAction SilentlyContinue
 # Restore Working Directory
 Write-Host "Done."
 Write-Host "Upload the files in folder `"$PublishOutputDir`" to respective location or website."
-if ($UseScriptDirectory) {
-    Pop-Location
-}
+Pop-Location
