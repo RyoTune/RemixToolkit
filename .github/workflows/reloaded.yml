@@ -115,20 +115,20 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Get changelog
-        uses: actions/download-artifact@v4
-        with:
-          name: Changelog
-      - name: Get release
-        uses: actions/download-artifact@v4
-        with:
-          name: GitHub Release
-          path: release
-      - name: Upload to GitHub Releases (on Tag)
-        uses: softprops/action-gh-release@v0.1.14
-        if: env.IS_RELEASE == 'true'
-        with:
-          # Path to load note-worthy description of changes in release from
-          body_path: "Changelog.md"
-          # Newline-delimited list of path globs for asset files to upload
-          files: release/*
+    - name: Get changelog
+      uses: actions/download-artifact@v4
+      with:
+        name: Changelog
+    - name: Get release
+      uses: actions/download-artifact@v4
+      with:
+        name: GitHub Release
+        path: release
+    - name: Upload to GitHub Releases (on Tag)
+      uses: softprops/action-gh-release@v0.1.14
+      if: env.IS_RELEASE == 'true'
+      with:
+        # Path to load note-worthy description of changes in release from
+        body_path: "Changelog.md"
+        # Newline-delimited list of path globs for asset files to upload
+        files: release/**
