@@ -1,7 +1,7 @@
-### No-Code Mod Configs
+# No-Code Mod Configs
 Mods can now add basic configs without having to make a code mod, with the ability to use any/most mod APIs.
 
-__Creating a Config__
+## Creating a Config
 - Create the file `MOD_FOLDER/ReMIX/Config/config.yaml` in your mod.
 - Add a setting.
 ```
@@ -26,9 +26,11 @@ actions:
 - __Remember to add a Mod Dependency on any mod whose APIs you use!__ 
 - Done 🎉! A mod config should now be available, though you might have to refresh the mod list or restart Reloaded.
 
-__Constants and Placeholders__
+## Constants, Placeholders, and Formatting
 
 You can insert constants and settings into any part of an action, besides the `if` condition. The syntax for it is `{VariableName}`.  If you do, make sure to wrap the entire text with `''`.
+
+String formatting is handled by [SmartFormat](https://github.com/axuno/SmartFormat/wiki). Consider checking out the wiki to see all features available, such as lists.
 
 ```
 constants:
@@ -61,4 +63,74 @@ actions:
       with:
         - '{ModDir}/new-ryo/'
         - null
+```
+
+## The File System (Creating, Deleting, Copying Files and Folders)
+**ReMIX Toolkit** includes an API for easy access to the File System in your config.
+
+### `RemixToolkit.Interfaces.IFileSystem`
+
+```
+void CopyFile(string sourceFile, string destFile);
+
+void CopyFolder(string sourceDir, string destDir);
+
+void CreateFolder(string dir);
+
+void DeleteFile(string file);
+
+void DeleteFolder(string dir);
+
+bool FileExists(string file);
+
+bool FolderExists(string dir);
+
+string ReadFile(string file);
+
+void WriteFile(string file, string content);
+```
+
+### Example
+```
+constants:
+    FS_API: RemixToolkit.Interfaces.IFileSystem
+    BATTLE_THEMES_API: BGME.BattleThemes.Interfaces.IBattleThemesApi
+    
+settings:
+    - id: MassDestruction
+      type: bool
+      name: Mass Destruction
+      list: NormalSongs
+      value_on: p3r_MassDestructionfesReload
+      default: true
+      
+    - id: ReachOutToTheTruth
+      type: bool
+      name: Reach Out to the Truth 
+      list: NormalSongs
+      value_on: p4_ReachOutToTheTruth
+      default: true
+      
+    - id: LastSurprise
+      type: bool
+      name: Last Surprise
+      list: NormalSongs
+      value_on: p5_LastSurprise
+      default: true
+
+actions:
+    - using: '{FS_API}'
+      run: WriteFile
+      with:
+        - '{ModFolder}/codeless_themes/output.theme.pme'
+        - |
+          const songs = [{NormalSongs:list:{}|, }]
+          
+          const BATTLE_THEME = random_song(songs)
+          
+    - using: '{BATTLE_THEMES_API}'
+      run: AddPath
+      with:
+        - '{ModId}'
+        - '{ModFolder}/codeless_themes/output.theme.pme'
 ```
