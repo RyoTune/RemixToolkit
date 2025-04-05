@@ -41,9 +41,9 @@ internal class ConfigsService
             }
 
             // Add setting values.
-            foreach (var item in config.PropertyDescriptors)
+            foreach (var name in config.GetDynamicMemberNames())
             {
-                variables[item.Name] = item.GetValue(variables);
+                variables[name] = config.GetSettingValue(name);
             }
 
             // Add lists.
@@ -61,20 +61,20 @@ internal class ConfigsService
         // Execute actions.
         foreach (var action in config.Actions)
         {
-            if (!string.IsNullOrEmpty(action.If) && (bool)config.GetSettingValue(action.If)! == false)
+            if (!string.IsNullOrEmpty(action.If) && GetProcessedValue<bool>(action.If, variables) == false)
             {
                 continue;
             }
 
-            var actionUsing = Smart.Format(action.Using, variables);
+            var actionUsing = GetProcessedValue<string>(action.Using, variables) ?? throw new Exception($"Failed to process 'using': {action.Using}");
             var controller = GetController(actionUsing) ?? throw new Exception($"Failed to find 'using': {actionUsing}");
 
             var typeInstance = controller.Target!;
-            var actionRun = Smart.Format(action.Run, variables);
+            var actionRun = GetProcessedValue<string>(action.Run, variables) ?? throw new Exception($"Failed to process 'run': {action.Using}");
 
             var methodKey = $"{actionUsing}.{actionRun}";
 
-            // Retrieve method from cached methods or with relfection.
+            // Retrieve method from cached methods or with reflection.
             if (!cachedMethods.TryGetValue(methodKey, out var method))
             {
                 var type = typeInstance.GetType();
@@ -104,6 +104,46 @@ internal class ConfigsService
         return null;
     }
 
+    /// <summary>
+    /// Get the final converted value for <paramref name="input"/>. This may be <c>null</c>, a variable value, or a formatted value. 
+    /// </summary>
+    /// <param name="input">Input text value.</param>
+    /// <param name="variables">Available variables.</param>
+    /// <param name="targetType">Target type of final value.</param>
+    /// <returns>Final value of <paramref name="input"/> converted to <paramref name="targetType"/>.</returns>
+    private static object? GetProcessedValue(string? input, Dictionary<string, object?> variables, Type targetType)
+    {
+        // Input is null value.
+        if (input == null || input == "null") return null;
+
+        // Format input text with variables.
+        // Doing it early allows for using formatted strings to point to
+        // variables. IDK how useful that is, but meh more options.
+        input = Smart.Format(input, variables);
+
+        // Input is the raw value of a variable.
+        if (variables.TryGetValue(input, out var varValue))
+        {
+            return Convert.ChangeType(varValue, targetType);
+        }
+
+        // Format input text with variables.
+        return Convert.ChangeType(input, targetType);
+    }
+
+    /// <summary>
+    /// Get the final converted value for <paramref name="input"/>. This may be <c>null</c>, a variable value, or a formatted value. 
+    /// </summary>
+    /// <typeparam name="TValue">Target type of final value.</typeparam>
+    /// <param name="input">Input text value.</param>
+    /// <param name="variables">Available variables.</param>
+    /// <returns>Final value of <paramref name="input"/> converted to <typeparamref name="TValue"/>.</returns>
+    private static TValue? GetProcessedValue<TValue>(string? input, Dictionary<string, object?> variables)
+        => (TValue?)GetProcessedValue(input, variables, typeof(TValue));
+
+    private static object? ResolveParameter(string argValue, ParameterInfo targetParam, Dictionary<string, object?> variables)
+        => GetProcessedValue(argValue, variables, targetParam.ParameterType);
+
     private static object?[]? ResolveParameters(string[] actionArgs, ParameterInfo[] methodParams, Dictionary<string, object?> variables)
     {
         if (actionArgs.Length == 0) return null;
@@ -115,27 +155,6 @@ internal class ConfigsService
         }
 
         return resolved.ToArray();
-    }
-
-    private static object? ResolveParameter(string argValue, ParameterInfo targetParam, Dictionary<string, object?> variables)
-    {
-        if (argValue == null || argValue == "null") return null;
-
-        // Arg is the raw value of a setting/constant.
-        // Convert variable to param type.
-        if (variables.TryGetValue(argValue, out var varValue))
-        {
-            return Convert.ChangeType(varValue, targetParam.ParameterType);
-        }
-
-        // Parameter is string, format and use arg text.
-        if (targetParam.ParameterType == typeof(string))
-        {
-            return Smart.Format(argValue, variables);
-        }
-
-        // Convert arg text to parameter type.
-        return Convert.ChangeType(argValue, targetParam.ParameterType);
     }
 
     private static ConcurrentDictionary<Type, ModGenericTuple<object>> GetControllerMap(IModLoader modLoader)
