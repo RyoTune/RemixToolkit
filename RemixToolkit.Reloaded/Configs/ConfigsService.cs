@@ -104,40 +104,38 @@ internal class ConfigsService
         return null;
     }
 
-    private static object?[]? ResolveParameters(string[] actionArgs, ParameterInfo[] methodParams, Dictionary<string, object?> configVars)
+    private static object?[]? ResolveParameters(string[] actionArgs, ParameterInfo[] methodParams, Dictionary<string, object?> variables)
     {
         if (actionArgs.Length == 0) return null;
 
         var resolved = new List<object?>();
         for (int i = 0; i < actionArgs.Length; i++)
         {
-            var argText = actionArgs[i];
-
-            // Null arg value.
-            if (argText == null || argText == "null") return null;
-
-            var targetParam = methodParams[i];
-
-            // Arg is the raw value of a setting/constant.
-            if (configVars.TryGetValue(argText, out var configArg))
-            {
-                // Convert variable to param type.
-                resolved.Add(Convert.ChangeType(configArg, targetParam.ParameterType));
-                continue;
-            }
-
-            // Parameter is string, format and use arg text.
-            if (targetParam.ParameterType == typeof(string))
-            {
-                resolved.Add(Smart.Format(argText, configVars));
-                continue;
-            }
-
-            // Convert arg text to parameter type.
-            resolved.Add(Convert.ChangeType(argText, targetParam.ParameterType));
+            resolved.Add(ResolveParameter(actionArgs[i], methodParams[i], variables));
         }
 
         return resolved.ToArray();
+    }
+
+    private static object? ResolveParameter(string argValue, ParameterInfo targetParam, Dictionary<string, object?> variables)
+    {
+        if (argValue == null || argValue == "null") return null;
+
+        // Arg is the raw value of a setting/constant.
+        // Convert variable to param type.
+        if (variables.TryGetValue(argValue, out var varValue))
+        {
+            return Convert.ChangeType(varValue, targetParam.ParameterType);
+        }
+
+        // Parameter is string, format and use arg text.
+        if (targetParam.ParameterType == typeof(string))
+        {
+            return Smart.Format(argValue, variables);
+        }
+
+        // Convert arg text to parameter type.
+        return Convert.ChangeType(argValue, targetParam.ParameterType);
     }
 
     private static ConcurrentDictionary<Type, ModGenericTuple<object>> GetControllerMap(IModLoader modLoader)
