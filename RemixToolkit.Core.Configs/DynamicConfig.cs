@@ -136,7 +136,6 @@ public class DynamicConfig : DynamicObject, IConfigurable
     {
         var attributes = new List<Attribute>()
         {
-            new DisplayAttribute() { Order = -1 },
             new DefaultValueAttribute(property.GetDefaultValue()), // Config reset won't work without a default value attribute, surprisingly.
         };
 
