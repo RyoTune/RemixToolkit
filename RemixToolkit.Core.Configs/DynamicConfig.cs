@@ -69,7 +69,7 @@ public class DynamicConfig : DynamicObject, IConfigurable
 
     public PropertyDescriptor[] PropertyDescriptors { get; }
 
-    public string ConfigName { get; } = "Config Created with ReMIX Toolkit";
+    public string ConfigName { get; } = "Config Created with ReMIX Toolkit (1.0.0)";
 
     public Action Save { get; }
 
@@ -98,8 +98,7 @@ public class DynamicConfig : DynamicObject, IConfigurable
     public Dictionary<string, object?[]> Lists
         => _schema.Settings.Where(x => !string.IsNullOrEmpty(x.List))
         .GroupBy(x => x.List!)
-        .ToDictionary(x => x.Key, x => x.Select(setting => GetSettingValue(setting.Id))
-        .Where(x => x != null).ToArray());
+        .ToDictionary(x => x.Key, x => x.Select(setting => GetSettingValue(setting.Id)).Where(x => x != null).ToArray());
 
     public override IEnumerable<string> GetDynamicMemberNames() => _properties.Keys;
 
