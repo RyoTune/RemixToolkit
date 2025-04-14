@@ -52,7 +52,7 @@ public class Mod : ModBase, IExports
             return;
         }
 
-        _configService.OnModLoading(mod, modConfig);
+        _configService.OnModLoading(modConfig);
     }
 
     #region Standard Overrides
