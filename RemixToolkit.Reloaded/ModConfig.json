@@ -2,7 +2,7 @@
   "ModId": "RemixToolkit.Reloaded",
   "ModName": "ReMIX Toolkit",
   "ModAuthor": "RyoTune",
-  "ModVersion": "1.0.0",
+  "ModVersion": "1.1.0",
   "ModDescription": "Provides functionality needed by Reloaded II.5 ReMIX and related mods.",
   "ModDll": "RemixToolkit.Reloaded.dll",
   "ModIcon": "Preview.png",
