@@ -64,7 +64,7 @@ public class ConfigSetting
     public string[]? Choices { get; set; }
 
     public Type GetPropertyType()
-        => Type.ToLower() switch
+        => Type switch
         {
             "bool" or "toggle" => typeof(bool),
             "string" or "text" => typeof(string),

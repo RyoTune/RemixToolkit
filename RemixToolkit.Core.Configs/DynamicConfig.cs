@@ -72,22 +72,36 @@ public class DynamicConfig : DynamicObject, IConfigurable
 
     public Action Save { get; }
 
-    public object? GetSettingValue(string name)
-    {
-        if (_settings[name].ValueOn != null || _settings[name].ValueOff != null)
+    public object? GetSettingValue(string id)
+        => _settings[id].Type switch
         {
-            var settingBool = (bool)_properties[name].GetValue(this)!;
+            "enum" or "choice" => GetChoiceValue(id),
+            "bool" or "toggle" => GetBoolValue(id),
+            _ => _properties[id].GetValue(this),
+        };
+
+    private object? GetBoolValue(string id)
+    {
+        if (_settings[id].ValueOn != null || _settings[id].ValueOff != null)
+        {
+            var settingBool = (bool)_properties[id].GetValue(this)!;
             if (settingBool)
             {
-                return _settings[name].ValueOn;
+                return _settings[id].ValueOn;
             }
             else
             {
-                return _settings[name].ValueOff;
+                return _settings[id].ValueOff;
             }
         }
 
-        return _properties[name].GetValue(this);
+        return _properties[id].GetValue(this);
+    }
+
+    private string GetChoiceValue(string id)
+    {
+        var intValue = (int)_properties[id].GetValue(id)!;
+        return _settings[id].Choices![intValue];
     }
 
     public ConfigAction[] Actions => _schema.Actions;
