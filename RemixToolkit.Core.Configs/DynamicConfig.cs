@@ -4,7 +4,6 @@ using RemixToolkit.Core.Configs.Models;
 using RemixToolkit.Core.Configs.Relfection;
 using RemixToolkit.Interfaces.Serializers;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 
@@ -88,7 +87,7 @@ public class DynamicConfig : DynamicObject, IConfigurable
             }
         }
 
-        return _properties[name].GetValue(this)!;
+        return _properties[name].GetValue(this);
     }
 
     public ConfigAction[] Actions => _schema.Actions;

@@ -12,27 +12,43 @@ public class DynamicPropertyDescriptor : PropertyDescriptor
         : base(name, attrs)
     {
         _type = type;
-        _value = initialValue;
         _initialValue = initialValue;
+
+        SetValue(null, initialValue);
     }
 
     public override Type ComponentType => typeof(DynamicConfig);
 
     public override bool IsReadOnly { get; } = false;
 
-    public override Type PropertyType => _type!;
-
-    public override bool CanResetValue(object component) => true;
+    public override Type PropertyType => _type;
 
     public override object? GetValue(object? component) => _value;
 
-    public override void ResetValue(object component) => SetValue(component, _initialValue);
-
     public override void SetValue(object? component, object? value)
     {
-        _value = Convert.ChangeType(value, PropertyType);
+        if (_type.IsEnum)
+        {
+            if (value is string strEnumValue && Enum.TryParse(_type, strEnumValue, out var enumValue))
+            {
+                _value = enumValue;
+            }
+            else
+            {
+                _value = value;
+            }
+        }
+        else
+        {
+            _value = Convert.ChangeType(value, PropertyType);
+        }
+
         this.OnValueChanged(component, EventArgs.Empty);
     }
+
+    public override bool CanResetValue(object component) => true;
+
+    public override void ResetValue(object component) => SetValue(component, _initialValue);
 
     public override bool ShouldSerializeValue(object component) => true;
 }

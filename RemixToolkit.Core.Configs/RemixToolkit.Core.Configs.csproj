@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Reloaded.Mod.Interfaces" Version="2.4.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
